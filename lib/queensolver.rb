@@ -5,7 +5,6 @@ class QueenSolver
   attr_accessor :positions
   attr_accessor :row
   attr_accessor :column
-  attr_accessor :broken
   
   def initialize(n)
     if n > 3 or n == 1
@@ -24,7 +23,7 @@ class QueenSolver
 
   def place_queens
     place_next_queen
-    display_board
+    # display_board
   end
   
   def place_next_queen
@@ -79,13 +78,11 @@ class QueenSolver
   end
   
   # def diagonal_is_occupied(row_index, column_index)
-  #   diagonals = []
   #   #check up and back
   #   row = row_index - 1
   #   column = column_index - 1
   #   while row >=0 && column >= 0
   #     return true if @positions.include?([row,column])
-  #     # diagonals << [row,column]
   #     row -= 1; column -= 1
   #   end
   # 
@@ -94,7 +91,6 @@ class QueenSolver
   #   column = column_index + 1
   #   while row < @size && column < @size
   #     return true if @positions.include?([row,column])
-  #     # diagonals << [row,column]
   #     row += 1;column += 1
   #   end
   # 
@@ -103,7 +99,6 @@ class QueenSolver
   #   column = column_index + 1
   #   while row >= 0 && column < @size
   #     return true if @positions.include?([row,column])
-  #     # diagonals << [row,column]
   #     row -= 1;column +=1
   #   end
   # 
@@ -112,12 +107,8 @@ class QueenSolver
   #   column = column_index - 1
   #   while row < @size && column >= 0
   #     return true if @positions.include?([row,column])
-  #     # diagonals << [row,column]
   #     row += 1;column -= 1
   #   end
-  #   
-  #   # diagonals.keep_if {|coordinates| @positions.include?(coordinates)}
-  #   # diagonals.count > 0
   # end
   
   def diagonal_is_occupied(row_index, column_index)
@@ -163,17 +154,16 @@ class QueenSolver
   end
   
   def attacks_possible  
-    @positions.each do |position|
-      return true if attackable(position[0], position[1])
-    end
-    # return true if horizontal_attack == true
-    #  return true if vertical_attack == true
-    #  return true if diagonal_attack == true
+    return true if horizontal_attack == true
+    return true if vertical_attack == true
+    return true if diagonal_attack == true
   end
 
   def horizontal_attack
     @board.each do |row|
-      return true if row.compact.count > 1
+      if row.compact.count > 1
+        return true 
+      end
     end
   end
 
@@ -181,7 +171,9 @@ class QueenSolver
     column_values = (0..(@size-1)).to_a
     column_values.each do |column_position|
       column = @board.map {|row| row[column_position]}
-       return true if column.compact.count > 1
+       if column.compact.count > 1
+         return true
+       end
      end
   end
   
@@ -194,15 +186,16 @@ class QueenSolver
   end
   
   def forward_slash_attack
-    columns = (0..(@size-2)).to_a
+    columns = (0..(@size-2)).to_a    
     columns.each do |column|
-      row = 0; column = column
+      row_index = 0
+      column_index = column
       forward_slash = []
-      (@size - column).times do
-        forward_slash << @board[row][column]
+      (@size - column_index).times do
+        forward_slash << @board[row_index][column_index]
         return true if forward_slash.compact.count > 1
-        @row += 1
-        @column += 1
+        row_index += 1
+        column_index += 1
       end
     end
     
@@ -225,7 +218,7 @@ class QueenSolver
       row = 0; column = column
       backward_slash = []
       (column + 1).times do
-        backward_slash << board[row][column]
+        backward_slash << board[row][column]        
         return true if backward_slash.compact.count > 1
         row += 1
         column -= 1
@@ -234,11 +227,11 @@ class QueenSolver
     
     rows = (0..(@size-2)).to_a
     rows.each do |row|
-      row = row; column = (@board.count -1)
+      row = row; column = (@size - 1)
       backward_slash = []
       (@size - row).times do
         backward_slash << @board[row][column]
-        return true if backward_slash.compact.count > 1
+        return true if backward_slash.compact.count > 1       
         row += 1
         column -= 1
       end
