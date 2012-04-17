@@ -9,8 +9,8 @@ describe "Solving the N Queens Puzzle" do
     end
 
     it "should create a board for any number greater than 3" do
-      @queen_solver2 = QueenSolver.new(4)
-      @queen_solver2.board.should == [[nil,nil,nil,nil],
+      @queen_solver = QueenSolver.new(4)
+      @queen_solver.board.should == [[nil,nil,nil,nil],
                                      [nil,nil,nil,nil],
                                      [nil,nil,nil,nil],
                                      [nil,nil,nil,nil]]
@@ -114,22 +114,23 @@ describe "Solving the N Queens Puzzle" do
   end
     
   describe "checking for available coordinates based on positions in play" do
+    before(:each) do
+      @queen_solver = QueenSolver.new(4)
+    end
+    
     it "should return the coordinates for the next move"
 
     it "should know when a row is occupied by a position in play" do
-      @queen_solver = QueenSolver.new(4)
       @queen_solver.positions = [[1,3]]
       @queen_solver.row_is_occupied(1).should == true
     end
 
     it "should know if a column is occupied by a position in play" do
-      @queen_solver = QueenSolver.new(4)
       @queen_solver.positions = [[0,0]]
       @queen_solver.column_is_occupied(0).should == true
     end
 
     it "should know when a diagonal is occupied" do
-      @queen_solver = QueenSolver.new(4)
       @queen_solver.board = [[nil,nil,nil,nil],
                              [nil,"Q",nil,nil],
                              [nil,nil,nil,nil],

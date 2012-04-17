@@ -100,6 +100,29 @@ class QueenSolver
     end
   end
   
+  def display_error(n)
+    puts "The N Queens problem is not possible for a #{n} x #{n} board."
+  end
+  
+  def set_board
+    @board = Array.new(@size) 
+    @board.map! {|row| row = Array.new(@size)}
+  end
+  
+  def place_positions
+    set_board
+    @positions.each do |coordinates|
+      @board[coordinates[0]][coordinates[1]] = "Q"
+    end
+  end
+  
+  def display_board
+    @board.each do |row|
+      puts "#{row} \n"
+    end
+  end
+  
+### I left Lines 125 through 217 in for testing purposes and to show how I started to work on solving it ###
   def solved
     all_queens_placed && attacks_possible != true
   end
@@ -113,7 +136,7 @@ class QueenSolver
     return true if vertical_attack == true
     return true if diagonal_attack == true
   end
-
+  
   def horizontal_attack
     @board.each do |row|
       if row.compact.count > 1
@@ -121,7 +144,7 @@ class QueenSolver
       end
     end
   end
-
+  
   def vertical_attack
     column_values = (0..(@size-1)).to_a
     column_values.each do |column_position|
@@ -190,28 +213,6 @@ class QueenSolver
         row += 1
         column -= 1
       end
-    end
-  end
-  
-  def display_error(n)
-    puts "The N Queens problem is not possible for a #{n} x #{n} board."
-  end
-  
-  def set_board
-    @board = Array.new(@size) 
-    @board.map! {|row| row = Array.new(@size)}
-  end
-  
-  def place_positions
-    set_board
-    @positions.each do |coordinates|
-      @board[coordinates[0]][coordinates[1]] = "Q"
-    end
-  end
-  
-  def display_board
-    @board.each do |row|
-      puts "#{row} \n"
     end
   end
 end
