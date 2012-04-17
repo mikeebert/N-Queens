@@ -11,7 +11,7 @@ def column_is_occupied
 end
 
 
-#This checks the positions for diagonal is occupied
+#This checks the positions for diagonal is occupied BUT TAKES MUCH LONGER
 def diagonal_is_occupied(row_index, column_index)
   #check up and back
   row = row_index - 1

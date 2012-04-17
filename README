@@ -1,0 +1,10 @@
+This is my work-in-progress shot at the solution to N Queens.
+
+As of 4/17/12 it solves up to 20 queens but I'm still working on it. 
+
+To-do's:
+- Clean up ugly diagonal check methods
+- Move away from explicit return of true
+- Develop consistent "availability" check (currently column & row checks @positions, diagonals check @board)
+- Finish test for coordinates_of_next_move (where the recursion and while loop happen)
+- Keep refactoring and optimizing.

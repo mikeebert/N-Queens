@@ -3,27 +3,25 @@ class QueenSolver
   attr_accessor :board
   attr_accessor :size
   attr_accessor :positions
-  attr_accessor :row
-  attr_accessor :column
   
   def initialize(n)
     if n > 3 or n == 1
       @size = n
       set_board
-      set_initial_location
       @positions = Array.new
     else
       display_error(n)
     end
   end
+
+  def place_queens
+    set_initial_location
+    place_next_queen
+    display_board
+  end
   
   def set_initial_location
     @row = 0; @column = 0
-  end
-
-  def place_queens
-    place_next_queen
-    display_board
   end
   
   def place_next_queen
@@ -53,15 +51,11 @@ class QueenSolver
   end
   
   def row_is_occupied(row_index)
-    # row = @board[row_index]
-    # return true if row.compact.count > 1
     rows = @positions.map {|position| position[0]}
     return true if rows.include?(row_index)
   end
   
   def column_is_occupied(column_index)
-    # column = @board.map {|row| row[column_index]}
-    # return true if column.compact.count > 1
     coordinates = @positions.map{|position| position[1]}
     return true if coordinates.include?(column_index)
   end
@@ -122,7 +116,7 @@ class QueenSolver
     end
   end
   
-### I left Lines 125 through 217 in for testing purposes and to show how I started to work on solving it ###
+### ines 125 through 217 are not necessary except for testing purposes. I left them in to show how I started to work on solving it ###
   def solved
     all_queens_placed && attacks_possible != true
   end
