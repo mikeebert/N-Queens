@@ -84,7 +84,7 @@ class QueenSolver
     row = row_index - 1
     column = column_index - 1
     while row >=0 && column >= 0
-      return true if @board[row][column] == "Q"
+      return true if @positions.include?([row,column])
       row -= 1; column -= 1
     end
 
@@ -92,26 +92,60 @@ class QueenSolver
     row = row_index + 1
     column = column_index + 1
     while row < @size && column < @size
-      return true if @board[row][column] == "Q"
+      return true if @positions.include?([row,column])
       row += 1;column += 1
     end
-    
+
     #check up and forward
     row = row_index - 1
     column = column_index + 1
     while row >= 0 && column < @size
-      return true if @board[row][column] == "Q"
+      return true if @positions.include?([row,column])
       row -= 1;column +=1
     end
-    
+
     #check down and back
     row = row_index + 1
     column = column_index - 1
     while row < @size && column >= 0
-      return true if @board[row][column] == "Q"
+      return true if @positions.include?([row,column])
       row += 1;column -= 1
     end
   end
+  
+  # def diagonal_is_occupied(row_index, column_index)
+  #   #check up and back
+  #   row = row_index - 1
+  #   column = column_index - 1
+  #   while row >=0 && column >= 0
+  #     return true if @board[row][column] == "Q"
+  #     row -= 1; column -= 1
+  #   end
+  # 
+  #   #check down and forward
+  #   row = row_index + 1
+  #   column = column_index + 1
+  #   while row < @size && column < @size
+  #     return true if @board[row][column] == "Q"
+  #     row += 1;column += 1
+  #   end
+  #   
+  #   #check up and forward
+  #   row = row_index - 1
+  #   column = column_index + 1
+  #   while row >= 0 && column < @size
+  #     return true if @board[row][column] == "Q"
+  #     row -= 1;column +=1
+  #   end
+  #   
+  #   #check down and back
+  #   row = row_index + 1
+  #   column = column_index - 1
+  #   while row < @size && column >= 0
+  #     return true if @board[row][column] == "Q"
+  #     row += 1;column -= 1
+  #   end
+  # end
   
   def solved
     all_queens_placed && attacks_possible != true
