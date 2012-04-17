@@ -139,7 +139,6 @@ describe "Solving the N Queens Puzzle" do
    it "should place 1 Queen on a 1 x 1 Board" do
      @queen_solver = QueenSolver.new(1)
      @queen_solver.place_queens
-     @queen_solver.solved.should == true
      @queen_solver.attacks_possible.should_not == true      
    end
 
@@ -178,10 +177,7 @@ describe "Solving the N Queens Puzzle" do
     [1,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].each do |n|
       it "should place #{n} queens on an #{n} x #{n} board" do
         @queen_solver = QueenSolver.new(n)
-        @queen_solver.place_queens
-        # @queen_solver.attackable
-        # @queen_solver.broken.should_not == true
-        # @queen_solver.attacks_possible.should_not == true        
+        @queen_solver.place_queens     
       end
     end
   end
