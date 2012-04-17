@@ -23,7 +23,7 @@ class QueenSolver
 
   def place_queens
     place_next_queen
-    # display_board
+    display_board
   end
   
   def place_next_queen
@@ -37,21 +37,10 @@ class QueenSolver
   def coordinates_for_next_move
     while attackable(@row,@column)
       @column += 1 if @column < @size
-      if @column == @size
-        if @positions.map{|coordinates| coordinates[1] == (@size - 1)}.include?(true)
-          move_at_end_of_row = @positions.index{|column| column[1] == (@size-1)}
-          positions_to_delete = (move_at_end_of_row..(@positions.count-1)).to_a
-          positions_to_delete.reverse.each {|index| @positions.delete_at(index)}
-          @row = @positions.last[0]
-          @column = @positions.last[1] + 1
-          @positions.delete_at(@positions.count - 1)
-          # place_positions #toggling this comment fixes n=16; BREAKS 17 through 20
-        else
-          @row = @positions.last[0]
-          @column = @positions.last[1] + 1
-          @positions.delete_at(@positions.count - 1)
-          place_positions #uncommenting this fixes 16,18,19;BREAKS 17,20
-        end
+      while @column >= @size
+        @row = @positions.last[0]
+        @column = @positions.last[1] + 1
+        @positions.delete_at(@positions.count - 1)
       end
     end
     place_next_queen
@@ -64,52 +53,18 @@ class QueenSolver
   end
   
   def row_is_occupied(row_index)
-    rows = @positions.map {|position| position[0]}
-    return true if rows.include?(row_index)
     # row = @board[row_index]
     # return true if row.compact.count > 1
+    rows = @positions.map {|position| position[0]}
+    return true if rows.include?(row_index)
   end
   
   def column_is_occupied(column_index)
+    # column = @board.map {|row| row[column_index]}
+    # return true if column.compact.count > 1
     coordinates = @positions.map{|position| position[1]}
     return true if coordinates.include?(column_index)
-    # column = @board.map {|row| row[column_index]}
-    # return true if column.compact.count > 0
   end
-  
-  # def diagonal_is_occupied(row_index, column_index)
-  #   #check up and back
-  #   row = row_index - 1
-  #   column = column_index - 1
-  #   while row >=0 && column >= 0
-  #     return true if @positions.include?([row,column])
-  #     row -= 1; column -= 1
-  #   end
-  # 
-  #   #check down and forward
-  #   row = row_index + 1
-  #   column = column_index + 1
-  #   while row < @size && column < @size
-  #     return true if @positions.include?([row,column])
-  #     row += 1;column += 1
-  #   end
-  # 
-  #   #check up and forward
-  #   row = row_index - 1
-  #   column = column_index + 1
-  #   while row >= 0 && column < @size
-  #     return true if @positions.include?([row,column])
-  #     row -= 1;column +=1
-  #   end
-  # 
-  #   #check down and back
-  #   row = row_index + 1
-  #   column = column_index - 1
-  #   while row < @size && column >= 0
-  #     return true if @positions.include?([row,column])
-  #     row += 1;column -= 1
-  #   end
-  # end
   
   def diagonal_is_occupied(row_index, column_index)
     #check up and back
@@ -119,7 +74,7 @@ class QueenSolver
       return true if @board[row][column] == "Q"
       row -= 1; column -= 1
     end
-  
+      
     #check down and forward
     row = row_index + 1
     column = column_index + 1
@@ -249,7 +204,6 @@ class QueenSolver
   
   def place_positions
     set_board
-    # print "The positions are: #{positions} \n"
     @positions.each do |coordinates|
       @board[coordinates[0]][coordinates[1]] = "Q"
     end
