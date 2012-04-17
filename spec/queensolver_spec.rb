@@ -111,9 +111,7 @@ describe "Solving the N Queens Puzzle" do
   
   describe "placing queens on a baord" do
     
-    it "should return the coordinates for the next move" do
-      
-    end
+    it "should return the coordinates for the next move"
     
     
     it "should know if a column is occupied" do
@@ -134,27 +132,46 @@ describe "Solving the N Queens Puzzle" do
       @queen_solver.diagonal_is_occupied(0,0).should == true
       @queen_solver.diagonal_is_occupied(2,0).should == true      
     end
-    
-    it "should place 1 Queen on a 1 x 1 Board" do
-      @queen_solver = QueenSolver.new(1)
-      @queen_solver.place_queens
-      @queen_solver.solved.should == true
-    end
+  end
+  
+  describe "incremental tests" do
+  
+   it "should place 1 Queen on a 1 x 1 Board" do
+     @queen_solver = QueenSolver.new(1)
+     @queen_solver.place_queens
+     @queen_solver.solved.should == true
+     @queen_solver.attacks_possible.should_not == true      
+   end
 
-    it "should place 4 Queens on a 4 x 4 Board" do
-      @queen_solver = QueenSolver.new(4)
-      @queen_solver.place_queens
-    end
-    
-    it "should place 6 Queens on a 6 x 6 Board" do
-      @queen_solver = QueenSolver.new(6)
-      @queen_solver.place_queens
-    end
-    
-    it "should place 8 Queens on a 8 x 8 Board" do
-      @queen_solver = QueenSolver.new(8)
-      @queen_solver.place_queens
-    end
+   it "should place 4 Queens on a 4 x 4 Board" do
+     @queen_solver = QueenSolver.new(4)
+     @queen_solver.place_queens
+     @queen_solver.attacks_possible.should_not == true
+   end
+   
+   it "should place 4 Queens on a 5 x 5 Board" do
+     @queen_solver = QueenSolver.new(5)
+     @queen_solver.place_queens
+     @queen_solver.attacks_possible.should_not == true
+   end
+   
+   it "should place 6 Queens on a 6 x 6 Board" do
+     @queen_solver = QueenSolver.new(6)
+     @queen_solver.place_queens
+     # @queen_solver.attacks_possible.should_not == true
+   end
+   
+   it "should place 6 Queens on a 7 x 7 Board" do
+     @queen_solver = QueenSolver.new(7)
+     @queen_solver.place_queens
+     # @queen_solver.attacks_possible.should_not == true
+   end
+   
+   it "should place 8 Queens on a 8 x 8 Board" do
+     @queen_solver = QueenSolver.new(8)
+     @queen_solver.place_queens
+     # @queen_solver.attacks_possible.should_not == true      
+   end
   end
   
   describe "Placing N Queens on an N X N Board" do
@@ -162,6 +179,9 @@ describe "Solving the N Queens Puzzle" do
       it "should place #{n} queens on an #{n} x #{n} board" do
         @queen_solver = QueenSolver.new(n)
         @queen_solver.place_queens
+        # @queen_solver.attackable
+        # @queen_solver.broken.should_not == true
+        # @queen_solver.attacks_possible.should_not == true        
       end
     end
   end

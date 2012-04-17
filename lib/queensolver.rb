@@ -5,6 +5,7 @@ class QueenSolver
   attr_accessor :positions
   attr_accessor :row
   attr_accessor :column
+  attr_accessor :broken
   
   def initialize(n)
     if n > 3 or n == 1
@@ -35,44 +36,47 @@ class QueenSolver
   end
   
   def coordinates_for_next_move
-    while column_is_occupied(@column) || diagonal_is_occupied(@row,@column)
+    while attackable(@row,@column)
       @column += 1 if @column < @size
       if @column == @size
         if @positions.map{|coordinates| coordinates[1] == (@size - 1)}.include?(true)
           move_at_end_of_row = @positions.index{|column| column[1] == (@size-1)}
-          puts "The move at the end of the row is #{move_at_end_of_row}"
+          # puts "The move at the end of the row is #{move_at_end_of_row}"
           positions_to_delete = (move_at_end_of_row..(@positions.count-1)).to_a
-          puts "The array of indexes to delete are #{positions_to_delete}"
+          # puts "The array of indexes to delete are #{positions_to_delete}"
           positions_to_delete.reverse.each {|index| @positions.delete_at(index)}
-          puts "The remaining positions are #{@positions}"
+          # puts "The remaining positions are #{@positions}"
           @row = @positions.last[0]
           @column = @positions.last[1] + 1
           @positions.delete_at(@positions.count - 1)
-          puts "Positions now equals #{@positions} and starting coordinates are #{@row}, #{@column}"
-          place_positions
-        elsif @row == @size - 1 && @column == @size
-          puts "it hit the elsif statement"
-          @row = 0
-          @column = @positions.last[1] + 1
-          @positions.delete(@positions.count - 1)
-          place_positions
+          # puts "Positions now equals #{@positions} and starting coordinates are #{@row}, #{@column}"
+          # place_positions --> UNCOMMENTING THIS FIXES n=16; BREAKS n=20
         else
-          puts "it hit the else statement"
+          # puts "it hit the else statement"
           @row = @positions.last[0]
           @column = @positions.last[1] + 1
           @positions.delete_at(@positions.count - 1)
-          
+          place_positions #uncommenting this fixes 16,18,19;BREAKS 17,20
         end
       end
     end
     place_next_queen
   end
   
+  def attackable(row_index, column_index)
+    return true if row_is_occupied(row_index)
+    return true if column_is_occupied(column_index)
+    return true if diagonal_is_occupied(row_index, column_index)
+  end
+  
+  def row_is_occupied(row_index)
+    rows = @positions.map {|position| position[0]}
+    return true if rows.include?(row_index)
+  end
+  
   def column_is_occupied(column_index)
-    # coordinates = @positions.map{|position| position[1] == column_index}
-    # return true if coordinates.include?(true)    
-    column = @board.map {|row| row[column_index]}
-    return true if column.compact.count > 0
+    coordinates = @positions.map{|position| position[1]}
+    return true if coordinates.include?(column_index)    
   end
   
   def diagonal_is_occupied(row_index, column_index)
@@ -118,9 +122,12 @@ class QueenSolver
   end
   
   def attacks_possible  
-    return true if horizontal_attack == true
-    return true if vertical_attack == true
-    return true if diagonal_attack == true
+    @positions.each do |position|
+      @broken = true if attackable(position[0], position[1])
+    end
+    # return true if horizontal_attack == true
+    #  return true if vertical_attack == true
+    #  return true if diagonal_attack == true
   end
 
   def horizontal_attack
@@ -145,57 +152,57 @@ class QueenSolver
     end
   end
   
-  # def forward_slash_attack
-  #   columns = (0..(@size-2)).to_a
-  #   columns.each do |column|
-  #     @row = 0; @column = column
-  #     forward_slash = []
-  #     (@size - column).times do
-  #       forward_slash << @board[@row][@column]
-  #       return true if forward_slash.compact.count > 1
-  #       @row += 1
-  #       @column += 1
-  #     end
-  #   end
-  #   
-  #   rows = (0..(@size-2)).to_a
-  #   rows.each do |row|
-  #     @row = row; @column = 0
-  #     forward_slash = []
-  #     (@size - row).times do
-  #       forward_slash << @board[@row][@column]
-  #       return true if forward_slash.compact.count > 1
-  #       @row += 1
-  #       @column += 1
-  #     end
-  #   end
-  # end
-  # 
-  # def backward_slash_attack
-  #   columns = (1..(@size-1)).to_a
-  #   columns.reverse.each do |column|
-  #     @row = 0; @column = column
-  #     backward_slash = []
-  #     (column + 1).times do
-  #       backward_slash << @board[@row][@column]
-  #       return true if backward_slash.compact.count > 1
-  #       @row += 1
-  #       @column -= 1
-  #     end
-  #   end
-  #   
-  #   rows = (0..(@size-2)).to_a
-  #   rows.each do |row|
-  #     @row = row; @column = (@board.count -1)
-  #     backward_slash = []
-  #     (@size - row).times do
-  #       backward_slash << @board[@row][@column]
-  #       return true if backward_slash.compact.count > 1
-  #       @row += 1
-  #       @column -= 1
-  #     end
-  #   end
-  # end
+  def forward_slash_attack
+    columns = (0..(@size-2)).to_a
+    columns.each do |column|
+      row = 0; column = column
+      forward_slash = []
+      (@size - column).times do
+        forward_slash << @board[row][column]
+        return true if forward_slash.compact.count > 1
+        @row += 1
+        @column += 1
+      end
+    end
+    
+    rows = (0..(@size-2)).to_a
+    rows.each do |row|
+      row = row; column = 0
+      forward_slash = []
+      (@size - row).times do
+        forward_slash << @board[row][column]
+        return true if forward_slash.compact.count > 1
+        row += 1
+        column += 1
+      end
+    end
+  end
+  
+  def backward_slash_attack
+    columns = (1..(@size-1)).to_a
+    columns.reverse.each do |column|
+      row = 0; column = column
+      backward_slash = []
+      (column + 1).times do
+        backward_slash << board[row][column]
+        return true if backward_slash.compact.count > 1
+        row += 1
+        column -= 1
+      end
+    end
+    
+    rows = (0..(@size-2)).to_a
+    rows.each do |row|
+      row = row; column = (@board.count -1)
+      backward_slash = []
+      (@size - row).times do
+        backward_slash << @board[row][column]
+        return true if backward_slash.compact.count > 1
+        row += 1
+        column -= 1
+      end
+    end
+  end
   
   def display_error(n)
     puts "The N Queens problem is not possible for a #{n} x #{n} board."
