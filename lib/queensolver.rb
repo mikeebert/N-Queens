@@ -31,25 +31,37 @@ class QueenSolver
     place_positions unless @positions.empty?
     @row += 1
     @column = 0
-    print "#{@positions} \n"
     coordinates_for_next_move unless @positions.count == @size
   end
   
   def coordinates_for_next_move
-    while column_is_occupied(@column) == true || diagonal_is_occupied(@row,@column) == true
-      @column += 1
+    while column_is_occupied(@column) || diagonal_is_occupied(@row,@column)
+      @column += 1 if @column < @size
       if @column == @size
-        if @positions.last[1] == @size - 1
-          @positions.delete_at(@positions.count - 1)
-          @positions.delete_at(@positions.count - 1)            
-        else
+        if @positions.map{|coordinates| coordinates[1] == (@size - 1)}.include?(true)
+          move_at_end_of_row = @positions.index{|column| column[1] == (@size-1)}
+          puts "The move at the end of the row is #{move_at_end_of_row}"
+          positions_to_delete = (move_at_end_of_row..(@positions.count-1)).to_a
+          puts "The array of indexes to delete are #{positions_to_delete}"
+          positions_to_delete.reverse.each {|index| @positions.delete_at(index)}
+          puts "The remaining positions are #{@positions}"
           @row = @positions.last[0]
           @column = @positions.last[1] + 1
           @positions.delete_at(@positions.count - 1)
-        end
-        if @positions.count == 0 
+          puts "Positions now equals #{@positions} and starting coordinates are #{@row}, #{@column}"
+          place_positions
+        elsif @row == @size - 1 && @column == @size
+          puts "it hit the elsif statement"
           @row = 0
-          @column += 1
+          @column = @positions.last[1] + 1
+          @positions.delete(@positions.count - 1)
+          place_positions
+        else
+          puts "it hit the else statement"
+          @row = @positions.last[0]
+          @column = @positions.last[1] + 1
+          @positions.delete_at(@positions.count - 1)
+          
         end
       end
     end
@@ -57,6 +69,8 @@ class QueenSolver
   end
   
   def column_is_occupied(column_index)
+    # coordinates = @positions.map{|position| position[1] == column_index}
+    # return true if coordinates.include?(true)    
     column = @board.map {|row| row[column_index]}
     return true if column.compact.count > 0
   end
@@ -81,7 +95,7 @@ class QueenSolver
     #check up and forward
     row = row_index - 1
     column = column_index + 1
-    while row > 0 && column < @size
+    while row >= 0 && column < @size
       return true if @board[row][column] == "Q"
       row -= 1;column +=1
     end
@@ -89,7 +103,7 @@ class QueenSolver
     #check down and back
     row = row_index + 1
     column = column_index - 1
-    while row < @size && column > 0
+    while row < @size && column >= 0
       return true if @board[row][column] == "Q"
       row += 1;column -= 1
     end
@@ -194,11 +208,10 @@ class QueenSolver
   
   def place_positions
     set_board
-    display_board
-    print "The positions are: #{positions} \n"
+    # print "The positions are: #{positions} \n"
     @positions.each do |coordinates|
       @board[coordinates[0]][coordinates[1]] = "Q"
-    end    
+    end
   end
   
   def display_board

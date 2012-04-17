@@ -135,27 +135,34 @@ describe "Solving the N Queens Puzzle" do
       @queen_solver.diagonal_is_occupied(2,0).should == true      
     end
     
-    it "should move a queen to the first available space" do
-      @queen_solver = QueenSolver.new(4)
-      @queen_solver.board[0][0] = "Q"
-      @queen_solver.positions << [0,0]
-      @queen_solver.move_to_next_available_space
-      @queen_solver.board.should == [["Q",nil,nil,nil],
-                                     [nil,nil,"Q",nil],
-                                     [nil,nil,nil,nil],
-                                     [nil,nil,nil,nil]]
-    end
-    
     it "should place 1 Queen on a 1 x 1 Board" do
       @queen_solver = QueenSolver.new(1)
       @queen_solver.place_queens
       @queen_solver.solved.should == true
     end
-    
+
     it "should place 4 Queens on a 4 x 4 Board" do
       @queen_solver = QueenSolver.new(4)
       @queen_solver.place_queens
-      # @queen_solver.solved.should == true
+    end
+    
+    it "should place 6 Queens on a 6 x 6 Board" do
+      @queen_solver = QueenSolver.new(6)
+      @queen_solver.place_queens
+    end
+    
+    it "should place 8 Queens on a 8 x 8 Board" do
+      @queen_solver = QueenSolver.new(8)
+      @queen_solver.place_queens
+    end
+  end
+  
+  describe "Placing N Queens on an N X N Board" do
+    [1,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].each do |n|
+      it "should place #{n} queens on an #{n} x #{n} board" do
+        @queen_solver = QueenSolver.new(n)
+        @queen_solver.place_queens
+      end
     end
   end
   
