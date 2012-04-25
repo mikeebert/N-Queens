@@ -26,23 +26,23 @@ class QueenSolver
   
   def place_next_queen
     @positions << [@row,@column]
-    place_positions unless @positions.empty?
-    @row += 1
+    place_positions
+    @row += 1 
     @column = 0
-    while @positions.count != @size
-      while attackable(@row,@column)
-        @column += 1 if @column < @size
-        while @column > (@size - 1)
+    if @positions.count != @size
+      while @column < @size && position_is_attackable(@row,@column)
+        @column += 1
+        while @column > (@size - 1) #&& @positions.count != 0
           @row = @positions.last[0]
           @column = @positions.last[1] + 1
           @positions.delete_at(@positions.count - 1)
         end
       end
-      place_next_queen
+      place_next_queen unless @positions.count == @size
     end
   end
   
-  def attackable(row_index, column_index)
+  def position_is_attackable(row_index, column_index)
     if row_is_occupied(row_index) || column_is_occupied(column_index) || diagonal_is_occupied(row_index, column_index)
       return true
     end
@@ -62,7 +62,7 @@ class QueenSolver
     #check up and back
     row = row_index - 1
     column = column_index - 1
-    while row >=0 && column >= 0
+    until row < 0 || column < 0
       # return true if @positions.include?([row,column])
       return true if @board[row][column] == "Q"
       row -= 1; column -= 1
@@ -71,7 +71,7 @@ class QueenSolver
     #check down and forward
     row = row_index + 1
     column = column_index + 1
-    while row < @size && column < @size
+    until row == @size || column == @size
       # return true if @positions.include?([row,column])
       return true if @board[row][column] == "Q"
       row += 1;column += 1
@@ -80,7 +80,7 @@ class QueenSolver
     #check up and forward
     row = row_index - 1
     column = column_index + 1
-    while row >= 0 && column < @size
+    until row < 0 || column == @size
       # return true if @positions.include?([row,column])      
       return true if @board[row][column] == "Q"
       row -= 1;column +=1
@@ -89,7 +89,7 @@ class QueenSolver
     #check down and back
     row = row_index + 1
     column = column_index - 1
-    while row < @size && column >= 0
+    until row == @size || column < 0
       # return true if @positions.include?([row,column])      
       return true if @board[row][column] == "Q"
       row += 1;column -= 1
