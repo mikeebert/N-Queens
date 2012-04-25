@@ -17,7 +17,7 @@ class QueenSolver
   def place_queens
     set_initial_location
     place_next_queen
-    display_board
+    #display_board # uncomment this line to display board after queens are placed.
   end
   
   def set_initial_location
@@ -45,9 +45,9 @@ class QueenSolver
   end
   
   def attackable(row_index, column_index)
-    return true if row_is_occupied(row_index)
-    return true if column_is_occupied(column_index)
-    return true if diagonal_is_occupied(row_index, column_index)
+    if row_is_occupied(row_index) || column_is_occupied(column_index) || diagonal_is_occupied(row_index, column_index)
+      return true
+    end
   end
   
   def row_is_occupied(row_index)
@@ -116,7 +116,7 @@ class QueenSolver
     end
   end
   
-### ines 125 through 217 are not necessary except for testing purposes. I left them in to show how I started to work on solving it ###
+### Lines 125 through 217 are not necessary except for testing purposes. I left them in to show how I started to work on solving it ###
   def solved
     all_queens_placed && attacks_possible != true
   end
@@ -133,9 +133,7 @@ class QueenSolver
   
   def horizontal_attack
     @board.each do |row|
-      if row.compact.count > 1
-        return true 
-      end
+      return true if row.compact.count > 1
     end
   end
   
@@ -143,70 +141,72 @@ class QueenSolver
     column_values = (0..(@size-1)).to_a
     column_values.each do |column_position|
       column = @board.map {|row| row[column_position]}
-       if column.compact.count > 1
-         return true
-       end
+       return true if column.compact.count > 1
      end
   end
   
   def diagonal_attack
-    if forward_slash_attack == true
-      return true
-    elsif backward_slash_attack == true
-      return true
+    forward_slash_attack_possible == true || backward_slash_attack_possible == true
+  end
+  
+  def forward_slash_attack_possible
+    #check from upper left moving right
+    column_index = 0
+    while column_index < @size
+      row = 0
+      column = column_index
+      slash = []
+      while row < @size && column < @size
+        slash << @board[row][column]
+        return true if slash.compact.count > 1
+        row += 1;column += 1
+      end
+      column_index += 1
+    end
+    
+    #check from upper left moving down
+    row_index = 0
+    while row_index < @size
+      column = 0
+      row = row_index
+      slash = []
+      while row < @size && column < @size
+        slash << @board[row][column]
+        return true if slash.compact.count > 1
+        row += 1;column += 1
+      end
+      row_index += 1
     end
   end
   
-  def forward_slash_attack
-    columns = (0..(@size-2)).to_a    
-    columns.each do |column|
-      row_index = 0
-      column_index = column
-      forward_slash = []
-      (@size - column_index).times do
-        forward_slash << @board[row_index][column_index]
-        return true if forward_slash.compact.count > 1
-        row_index += 1
-        column_index += 1
+  def backward_slash_attack_possible
+    #check from the end of the first row moving left
+    column_index = @size - 1 
+    while column_index > 0
+      row = 0
+      column = column_index
+      slash = []
+      while column >= 0 && row < @size
+        slash << @board[row][column]
+        return true if slash.compact.count > 1
+        row += 1; column -= 1
       end
+      column_index -= 1
     end
     
-    rows = (0..(@size-2)).to_a
-    rows.each do |row|
-      row = row; column = 0
-      forward_slash = []
-      (@size - row).times do
-        forward_slash << @board[row][column]
-        return true if forward_slash.compact.count > 1
-        row += 1
-        column += 1
+    #check from the end of the first row moving down
+    row_index = 0
+    while row_index < @size
+      row = row_index
+      column = @size - 1
+      slash = []
+      while row < @size && column >= 0
+        slash << @board[row][column]
+        return true if slash.compact.count > 1
+        row += 1; column -= 1
       end
+      row_index += 1
     end
   end
-  
-  def backward_slash_attack
-    columns = (1..(@size-1)).to_a
-    columns.reverse.each do |column|
-      row = 0; column = column
-      backward_slash = []
-      (column + 1).times do
-        backward_slash << board[row][column]        
-        return true if backward_slash.compact.count > 1
-        row += 1
-        column -= 1
-      end
-    end
-    
-    rows = (0..(@size-2)).to_a
-    rows.each do |row|
-      row = row; column = (@size - 1)
-      backward_slash = []
-      (@size - row).times do
-        backward_slash << @board[row][column]
-        return true if backward_slash.compact.count > 1       
-        row += 1
-        column -= 1
-      end
-    end
-  end
+      
 end
