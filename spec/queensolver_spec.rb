@@ -53,11 +53,11 @@ describe "Solving the N Queens Puzzle" do
       end
     end
     
-    # it "should place 25 queens on a 25 x 25 board" do
-    #   @queen_solver = QueenSolver.new(25)
-    #   @queen_solver.place_queens
-    #   @queen_solver.solved.should == true
-    # end
+    it "should place 25 queens on a 25 x 25 board" do
+      @queen_solver = QueenSolver.new(25)
+      @queen_solver.place_queens
+      @queen_solver.solved.should == true
+    end
   end
     
   describe "checking for available coordinates based on positions in play" do

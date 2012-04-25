@@ -29,19 +29,17 @@ class QueenSolver
     place_positions unless @positions.empty?
     @row += 1
     @column = 0
-    coordinates_for_next_move unless @positions.count == @size
-  end
-  
-  def coordinates_for_next_move
-    while attackable(@row,@column)
-      @column += 1 if @column < @size
-      while @column >= @size
-        @row = @positions.last[0]
-        @column = @positions.last[1] + 1
-        @positions.delete_at(@positions.count - 1)
+    while @positions.count != @size
+      while attackable(@row,@column)
+        @column += 1 if @column < @size
+        while @column > (@size - 1)
+          @row = @positions.last[0]
+          @column = @positions.last[1] + 1
+          @positions.delete_at(@positions.count - 1)
+        end
       end
+      place_next_queen
     end
-    place_next_queen
   end
   
   def attackable(row_index, column_index)
@@ -65,6 +63,7 @@ class QueenSolver
     row = row_index - 1
     column = column_index - 1
     while row >=0 && column >= 0
+      # return true if @positions.include?([row,column])
       return true if @board[row][column] == "Q"
       row -= 1; column -= 1
     end
@@ -73,6 +72,7 @@ class QueenSolver
     row = row_index + 1
     column = column_index + 1
     while row < @size && column < @size
+      # return true if @positions.include?([row,column])
       return true if @board[row][column] == "Q"
       row += 1;column += 1
     end
@@ -81,6 +81,7 @@ class QueenSolver
     row = row_index - 1
     column = column_index + 1
     while row >= 0 && column < @size
+      # return true if @positions.include?([row,column])      
       return true if @board[row][column] == "Q"
       row -= 1;column +=1
     end
@@ -89,6 +90,7 @@ class QueenSolver
     row = row_index + 1
     column = column_index - 1
     while row < @size && column >= 0
+      # return true if @positions.include?([row,column])      
       return true if @board[row][column] == "Q"
       row += 1;column -= 1
     end
