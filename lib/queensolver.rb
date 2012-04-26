@@ -17,7 +17,7 @@ class QueenSolver
   def place_queens
     set_initial_location
     place_next_queen
-    #display_board # uncomment this line to display board after queens are placed.
+    display_board # uncomment this line to display board after queens are placed.
   end
   
   def set_initial_location
@@ -114,7 +114,14 @@ class QueenSolver
   
   def display_board
     @board.each do |row|
-      puts "#{row} \n"
+      row.each do |value|
+        if value == "Q" 
+          print " Q " 
+        else
+          print " . "
+        end
+      end
+      puts "\n"
     end
   end
   
